@@ -6,6 +6,17 @@
     <title>Dyna Calc</title>
 </head>
 <body>
-    <h2>NYI</h2>
+    <h1>Dyna Calc</h1>
+    <input type="text" id="expressionInput" placeholder="Enter expression" />
+    <button id="calculateButton">Calculate</button>
+    <div id="resultDisplay"></div>
+    <script src="../../lib/ddcMath/interpret.js"></script>
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', function() {
+            const expression = document.getElementById('expressionInput').value;
+            const result = EvaluateMath(expression);
+            document.getElementById('resultDisplay').innerText = `Result: ${result}`;
+        });
+    </script>
 </body>
 </html>
