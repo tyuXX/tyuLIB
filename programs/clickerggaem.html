@@ -34,12 +34,17 @@
 
     <script type="module" src="../lib/ddcGame/gameSave.js"></script>
     <script type="module" defer>
-      import { DDCSave, loadLocalSave, newSave } from "../lib/ddcGame/gameSave.js";
+      import {
+        DDCSave,
+        loadLocalSave,
+        newSave,
+      } from "../lib/ddcGame/gameSave.js";
       globalThis.gameData = {
         money: 0,
         level: 1,
       };
-      let save = loadLocalSave("clickerggaem") || newSave(gameData, "1", "clickerggaem");
+      let save =
+        loadLocalSave("clickerggaem") || newSave(gameData, "1", "clickerggaem");
       gameData = save.data;
       setInterval(() => {
         save.data = gameData;
