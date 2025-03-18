@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Number Test</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <script type="module">
+            // Import from our updated module.
+            import { LargeNumber, ExtremelyLargeNumber, StupendouslyLargeNumber } from '../lib/ddcLIB/ddcELN.js';
+
+            // LargeNumber tests.
+            const ln1 = new LargeNumber(123456789);
+            const ln2 = new LargeNumber("3.14e8");
+            const lnSum = ln1.add(ln2);
+            const lnMul = ln1.multiply(ln2);
+
+            // ExtremelyLargeNumber tests using normal and extremely large values.
+            const eln1 = new ExtremelyLargeNumber("1e100");
+            const eln2 = new ExtremelyLargeNumber("1e120");
+            const elnMul = eln1.multiply(eln2);
+
+            const eln3 = new ExtremelyLargeNumber("1e400");
+            const eln4 = new ExtremelyLargeNumber("1e500");
+            const elnMul2 = eln3.multiply(eln4);
+
+            // New tests: Repeated multiplication and power tests up to values of 9e999999999.
+            const lnBig = new LargeNumber("9e999999999");
+            let lnRepeated = lnBig;
+            for (let i = 0; i < 100; i++) {
+                lnRepeated = lnRepeated.multiply(lnBig);
+            }
+            const lnPow2 = lnBig.pow(2);
+            const lnPow3 = lnBig.pow(3);
+
+            const elnBig = new ExtremelyLargeNumber("9e99999999999999999999999999999999999999999999999999999999999999999999999999");
+            let elnRepeated = elnBig;
+            for (let i = 0; i < 100; i++) {
+                elnRepeated = elnRepeated.multiply(elnBig);
+            }
+            let elnPowH = elnBig;
+            for (let i = 0; i < 10000000; i++) {
+                elnPowH = elnPowH.pow(310);
+            }
+            const elnPow2 = elnBig.pow(2);
+            const elnPow3 = elnBig.pow(3);
+
+            // NEW TEST: ExtremelyLargeNumber with layer1 (using custom "^^" notation)
+            const elnLayerTest = new ExtremelyLargeNumber("10^^1e500");
+
+            // NEW TESTS: StupendouslyLargeNumber
+            const sln1 = new StupendouslyLargeNumber("1e1000");
+            const sln2 = new StupendouslyLargeNumber("9e999");
+            const slnSum = sln1.add(sln2);
+            const slnSub = sln1.subtract(sln2);
+            const slnMul = sln1.multiply(sln2);
+            const slnPow = sln1.pow(2);
+            const slnSqrt = sln1.sqrt();
+
+            // NEW TESTS: Negative Number Tests
+            const lnNeg = new LargeNumber(-123456);
+            const lnNeg2 = new LargeNumber("-3.14e7");
+            const lnNegSum = lnNeg.add(lnNeg2);
+            const lnNegMul = lnNeg.multiply(lnNeg2);
+
+            const elnNeg = new ExtremelyLargeNumber("-1e50");
+            const elnNeg2 = new ExtremelyLargeNumber("-1e60");
+            const elnNegSum = elnNeg.add(elnNeg2);
+            const elnNegSub = elnNeg.subtract(elnNeg2);
+
+            const slnNeg = new StupendouslyLargeNumber("-1e100");
+            const slnNeg2 = new StupendouslyLargeNumber("-2e100");
+            const slnNegSum = slnNeg.add(slnNeg2);
+            const slnNegMul = slnNeg.multiply(slnNeg2);
+
+            // Display results.
+            const pre = document.createElement('pre');
+            pre.textContent = `
+LargeNumber Tests:
+  ln1: ${ln1.toString()}
+  ln2: ${ln2.toString()}
+  Sum: ${lnSum.toString()}
+  Mul: ${lnMul.toString()}
+
+ExtremelyLargeNumber Tests:
+  eln1 (1e100): ${eln1.toString()}
+  eln2 (1e120): ${eln2.toString()}
+  elnMul: ${elnMul.toString()}
+  eln3 (1e400): ${eln3.toString()}
+  eln4 (1e500): ${eln4.toString()}
+  elnMul2: ${elnMul2.toString()}
+
+Repeated Multiplication & Power Tests:
+  LargeNumber - Base: ${lnBig.toString()}
+  LargeNumber - Repeated Mul (×9e999999999^4 total): ${lnRepeated.toString()}
+  LargeNumber - 9e999999999^2: ${lnPow2.toString()}
+  LargeNumber - 9e999999999^3: ${lnPow3.toString()}
+
+  ExtremelyLargeNumber - Base: ${elnBig.toString()}
+  ExtremelyLargeNumber - Repeated Mul (×9e999999999^4 total): ${elnRepeated.toString()}
+  ExtremelyLargeNumber - 9e999999999^2: ${elnPow2.toString()}
+  ExtremelyLargeNumber - 9e999999999^3: ${elnPow3.toString()}
+  ExtremelyLargeNumber - Huge Pow: ${elnPowH.toString()}
+  StupendouslyLargeNumber - Huge Pow: ${elnPowH.toString()}
+
+Layer 1+ Test:
+  ExtremelyLargeNumber (custom "^^" notation): ${elnLayerTest.toString()}
+
+StupendouslyLargeNumber Tests:
+  sln1: ${sln1.toString()}
+  sln2: ${sln2.toString()}
+  Sum: ${slnSum.toString()}
+  Sub: ${slnSub.toString()}
+  Mul: ${slnMul.toString()}
+  Pow (sln1^2): ${slnPow.toString()}
+  Sqrt (sqrt(sln1)): ${slnSqrt.toString()}
+
+Negative Number Tests:
+  LargeNumber:
+    lnNeg: ${lnNeg.toString()}
+    lnNeg2: ${lnNeg2.toString()}
+    Sum: ${lnNegSum.toString()}
+    Mul: ${lnNegMul.toString()}
+  ExtremelyLargeNumber:
+    elnNeg: ${elnNeg.toString()}
+    elnNeg2: ${elnNeg2.toString()}
+    Sum: ${elnNegSum.toString()}
+    Sub: ${elnNegSub.toString()}
+  StupendouslyLargeNumber:
+    slnNeg: ${slnNeg.toString()}
+    slnNeg2: ${slnNeg2.toString()}
+    Sum: ${slnNegSum.toString()}
+    Mul: ${slnNegMul.toString()}
+            `;
+            document.body.appendChild(pre);
+        </script>
+    </body>
+</html>
