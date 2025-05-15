@@ -1,4 +1,4 @@
-Commit Hash: c05315cec1709e8189b33542ab86bd9e681f5a5a
-Commit Date: 2025-05-15T14:01:02Z
-Commit Message: Fix dictionary access in Language class to ensure correct key-value retrieval
-Version: 17
+Commit Hash: 81dab7115331d2d058550c9d5193e590fd1fd4f6
+Commit Date: 2025-05-15T14:12:39Z
+Commit Message: Fix page existence check in changePage function to ensure correct page switching
+Version: 18
