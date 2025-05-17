@@ -184,9 +184,13 @@ Negative Number Tests:
                `;
       })();
 
+      let total = 0, fails = 0;
+
       // Added checks for library correctness and precision
       function assertEqual(result, expected, testName) {
+        total++;
         if (result !== expected) {
+          fails++;
           console.error(
             `*FAILED: ${testName}. Expected: ${expected}, Got: ${result}`
           );
@@ -232,6 +236,12 @@ Negative Number Tests:
               .toString();
             assertEqual(res, "8e1", "LargeNumber power test");
           });
+          await measureTest("LargeNumber BigPow test", () => {
+            let res = new LargeNumber("2e200")
+              .pow(new LargeNumber("3e100"))
+              .toString();
+            assertEqual(res, "8e300", "LargeNumber BigPow test");
+          })
           await measureTest("LargeNumber min test", () => {
             let res = new LargeNumber("2e1")
               .min(new LargeNumber("3e0"))
@@ -429,6 +439,7 @@ Negative Number Tests:
       }
 
       await measureSection("Run Tests", runMeasuredTests);
+      pre.textContent += `\n\nTotal Tests: ${total}, Fails: ${fails}`;
     </script>
   </body>
 </html>
