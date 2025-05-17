@@ -19,74 +19,99 @@
         <script type="module">
             // Import from our updated module.
             import { LargeNumber, ExtremelyLargeNumber, StupendouslyLargeNumber } from '../lib/ddcLIB/ddcELN.js';
+            import { Stopwatch, Timer } from '../lib/ddcLIB/ddcPerformance.js';
 
-            // LargeNumber tests.
-            const ln1 = new LargeNumber(123456789);
-            const ln2 = new LargeNumber("3.14e8");
-            const lnSum = ln1.add(ln2);
-            const lnMul = ln1.multiply(ln2);
 
-            // ExtremelyLargeNumber tests using normal and extremely large values.
-            const eln1 = new ExtremelyLargeNumber("1e100");
-            const eln2 = new ExtremelyLargeNumber("1e120");
-            const elnMul = eln1.multiply(eln2);
-
-            const eln3 = new ExtremelyLargeNumber("1e400");
-            const eln4 = new ExtremelyLargeNumber("1e500");
-            const elnMul2 = eln3.multiply(eln4);
-
-            // New tests: Repeated multiplication and power tests up to values of 9e999999999.
-            const lnBig = new LargeNumber("9e999999999");
-            let lnRepeated = lnBig;
-            for (let i = 0; i < 100; i++) {
-                lnRepeated = lnRepeated.multiply(lnBig);
-            }
-            const lnPow2 = lnBig.pow(2);
-            const lnPow3 = lnBig.pow(3);
-
-            const elnBig = new ExtremelyLargeNumber("9e99999999999999999999999999999999999999999999999999999999999999999999999999");
-            let elnRepeated = elnBig;
-            for (let i = 0; i < 100; i++) {
-                elnRepeated = elnRepeated.multiply(elnBig);
-            }
-            let elnPowH = elnBig;
-            for (let i = 0; i < 10000000; i++) {
-                elnPowH = elnPowH.pow(310);
-            }
-            const elnPow2 = elnBig.pow(2);
-            const elnPow3 = elnBig.pow(3);
-
-            // NEW TEST: ExtremelyLargeNumber with layer1 (using custom "^^" notation)
-            const elnLayerTest = new ExtremelyLargeNumber("10^^1e500");
-
-            // NEW TESTS: StupendouslyLargeNumber
-            const sln1 = new StupendouslyLargeNumber("1e1000");
-            const sln2 = new StupendouslyLargeNumber("9e999");
-            const slnSum = sln1.add(sln2);
-            const slnSub = sln1.subtract(sln2);
-            const slnMul = sln1.multiply(sln2);
-            const slnPow = sln1.pow(2);
-            const slnSqrt = sln1.sqrt();
-
-            // NEW TESTS: Negative Number Tests
-            const lnNeg = new LargeNumber(-123456);
-            const lnNeg2 = new LargeNumber("-3.14e7");
-            const lnNegSum = lnNeg.add(lnNeg2);
-            const lnNegMul = lnNeg.multiply(lnNeg2);
-
-            const elnNeg = new ExtremelyLargeNumber("-1e50");
-            const elnNeg2 = new ExtremelyLargeNumber("-1e60");
-            const elnNegSum = elnNeg.add(elnNeg2);
-            const elnNegSub = elnNeg.subtract(elnNeg2);
-
-            const slnNeg = new StupendouslyLargeNumber("-1e100");
-            const slnNeg2 = new StupendouslyLargeNumber("-2e100");
-            const slnNegSum = slnNeg.add(slnNeg2);
-            const slnNegMul = slnNeg.multiply(slnNeg2);
-
-            // Display results.
             const pre = document.createElement('pre');
-            pre.textContent = `
+                document.body.appendChild(pre);
+
+            // Helper function to measure a section's execution time using Stopwatch
+            async function measureSection(sectionName, sectionFn) {
+                const sw = Stopwatch.fromFunc(sectionFn);
+                const elapsed = await sw.run();
+                console.log(`${sectionName} took ${elapsed} ms`);
+                pre.textContent += `\n${sectionName} took ${elapsed} ms`;
+            }
+
+            // Split measured sections for test variable computations
+            await (async () => {
+                // LargeNumber Tests
+                await measureSection("LargeNumber Tests", () => {
+                    window.ln1 = new LargeNumber(123456789);
+                    window.ln2 = new LargeNumber("3.14e8");
+                    window.lnSum = ln1.add(ln2);
+                    window.lnMul = ln1.multiply(ln2);
+                });
+                
+                // ExtremelyLargeNumber Tests
+                await measureSection("ExtremelyLargeNumber Tests", () => {
+                    window.eln1 = new ExtremelyLargeNumber("1e100");
+                    window.eln2 = new ExtremelyLargeNumber("1e120");
+                    window.elnMul = eln1.multiply(eln2);
+                    window.eln3 = new ExtremelyLargeNumber("1e400");
+                    window.eln4 = new ExtremelyLargeNumber("1e500");
+                    window.elnMul2 = eln3.multiply(eln4);
+                });
+                
+                // Repeated Multiplication & Power Tests
+                await measureSection("Repeated Multiplication & Power Tests", () => {
+                    window.lnBig = new LargeNumber("9e999999999");
+                    window.lnRepeated = lnBig;
+                    for (let i = 0; i < 100; i++) {
+                        lnRepeated = lnRepeated.multiply(lnBig);
+                    }
+                    window.lnPow2 = lnBig.pow(2);
+                    window.lnPow3 = lnBig.pow(3);
+                    
+                    window.elnBig = new ExtremelyLargeNumber("9e99999999999999999999999999999999999999999999999999999999999999999999999999");
+                    window.elnRepeated = elnBig;
+                    for (let i = 0; i < 100; i++) {
+                        elnRepeated = elnRepeated.multiply(elnBig);
+                    }
+                    window.elnPowH = elnBig;
+                    for (let i = 0; i < 10000000; i++) {
+                        elnPowH = elnPowH.pow(310);
+                    }
+                    window.elnPow2 = elnBig.pow(2);
+                    window.elnPow3 = elnBig.pow(3);
+                });
+                
+                // Layer 1+ Test
+                await measureSection("Layer 1+ Test", () => {
+                    window.elnLayerTest = new ExtremelyLargeNumber("10^^1e500");
+                });
+                
+                // StupendouslyLargeNumber Tests
+                await measureSection("StupendouslyLargeNumber Tests", () => {
+                    window.sln1 = new StupendouslyLargeNumber("1e1000");
+                    window.sln2 = new StupendouslyLargeNumber("9e999");
+                    window.slnSum = sln1.add(sln2);
+                    window.slnSub = sln1.subtract(sln2);
+                    window.slnMul = sln1.multiply(sln2);
+                    window.slnPow = sln1.pow(2);
+                    window.slnSqrt = sln1.sqrt();
+                });
+                
+                // Negative Number Tests
+                await measureSection("Negative Number Tests", () => {
+                    window.lnNeg = new LargeNumber(-123456);
+                    window.lnNeg2 = new LargeNumber("-3.14e7");
+                    window.lnNegSum = lnNeg.add(lnNeg2);
+                    window.lnNegMul = lnNeg.multiply(lnNeg2);
+                    
+                    window.elnNeg = new ExtremelyLargeNumber("-1e50");
+                    window.elnNeg2 = new ExtremelyLargeNumber("-1e60");
+                    window.elnNegSum = elnNeg.add(elnNeg2);
+                    window.elnNegSub = elnNeg.subtract(elnNeg2);
+                    
+                    window.slnNeg = new StupendouslyLargeNumber("-1e100");
+                    window.slnNeg2 = new StupendouslyLargeNumber("-2e100");
+                    window.slnNegSum = slnNeg.add(slnNeg2);
+                    window.slnNegMul = slnNeg.multiply(slnNeg2);
+                });
+                
+                // Display results.
+                pre.textContent += `
 LargeNumber Tests:
   ln1: ${ln1.toString()}
   ln2: ${ln2.toString()}
@@ -142,8 +167,73 @@ Negative Number Tests:
     slnNeg2: ${slnNeg2.toString()}
     Sum: ${slnNegSum.toString()}
     Mul: ${slnNegMul.toString()}
-            `;
-            document.body.appendChild(pre);
+               `;
+            })();
+
+            // Added checks for library correctness and precision
+            function assertEqual(result, expected, testName) {
+                if(result !== expected) {
+                    console.error(`FAILED: ${testName}. Expected: ${expected}, Got: ${result}`);
+                    pre.textContent += `\nFAILED: ${testName}. Expected: ${expected}, Got: ${result}`;
+                } else {
+                    console.log(`PASSED: ${testName}`);
+                    pre.textContent += `\nPASSED: ${testName}`;
+                }
+            }
+            
+            // Added helper function to measure test execution time using Stopwatch
+            async function measureTest(testName, testFn) {
+                const sw = Stopwatch.fromFunc(testFn);
+                const elapsed = await sw.run();
+                console.log(`${testName} took ${elapsed} ms`);
+                pre.textContent += `\n${testName} took ${elapsed} ms`;
+            }
+            
+            // Wrap all tests with measurements:
+            async function runMeasuredTests() {
+                await measureTest("LargeNumber addition test", () => {
+                    let res = new LargeNumber("1.23e2").add(new LargeNumber("4.56e2")).toString();
+                    assertEqual(res, "5.79e2", "LargeNumber addition test");
+                });
+                await measureTest("LargeNumber multiplication test", () => {
+                    let res = new LargeNumber("2e1").multiply(new LargeNumber("3e0")).toString();
+                    assertEqual(res, "6e1", "LargeNumber multiplication test");
+                });
+                await measureTest("LargeNumber precision addition test", () => {
+                    let res = new LargeNumber("1e-1").add(new LargeNumber("2e-1")).toString();
+                    assertEqual(res, "3e-1", "LargeNumber precision addition test");
+                });
+                await measureTest("LargeNumber negative addition test", () => {
+                    let res = new LargeNumber("-1.0e2").add(new LargeNumber("2.0e1")).toString();
+                    assertEqual(res, "-8e1", "LargeNumber negative addition test");
+                });
+                await measureTest("ExtremelyLargeNumber division test", () => {
+                    let res = new ExtremelyLargeNumber("1e120").divide(new ExtremelyLargeNumber("1e100")).toString();
+                    assertEqual(res, "1e20", "ExtremelyLargeNumber division test");
+                });
+                await measureTest("ExtremelyLargeNumber min test", () => {
+                    let res = new ExtremelyLargeNumber("1e50").min(new ExtremelyLargeNumber("2e50")).toString();
+                    assertEqual(res, "1e50", "ExtremelyLargeNumber min test");
+                });
+                await measureTest("ExtremelyLargeNumber floor test", () => {
+                    let res = new ExtremelyLargeNumber("3.7e2").floor().toString();
+                    assertEqual(res, "3e2", "ExtremelyLargeNumber floor test");
+                });
+                await measureTest("ExtremelyLargeNumber sqrt test", () => {
+                    let res = new ExtremelyLargeNumber("9e2").sqrt().toString();
+                    assertEqual(res, "3e1", "ExtremelyLargeNumber sqrt test");
+                });
+                await measureTest("StupendouslyLargeNumber addition test", () => {
+                    let res = new StupendouslyLargeNumber("1e1000").add(new StupendouslyLargeNumber("2e1000")).toString();
+                    assertEqual(res, "3e1000", "StupendouslyLargeNumber addition test");
+                });
+                await measureTest("StupendouslyLargeNumber division test", () => {
+                    let res = new StupendouslyLargeNumber("6e1000").divide(new StupendouslyLargeNumber("2e1000")).toString();
+                    assertEqual(res, "3e1000", "StupendouslyLargeNumber division test");
+                });
+            }
+            
+            await runMeasuredTests();
         </script>
     </body>
 </html>

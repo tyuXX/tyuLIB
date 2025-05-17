@@ -29,11 +29,14 @@
                 Lag Duration (ms):
                 <input type="number" id="lagDuration" value="200" min="0">
             </label>
+            <!-- New controls for Stopwatch and Ticker -->
+            <button id="testStopwatchBtn">Test Stopwatch</button>
+            <button id="testTickerBtn">Test Ticker</button>
         </div>
         <div id="output"></div>
         <script type="module">
-            // filepath: a:\_store\Web\tyuLIB\programs\performancerecorder.html
-            import { PerformanceRecorder } from "../lib/ddcLIB/ddcPerformance.js";
+            // filepath: d:\_store\Web\tyuLIB\programs\performancerecorder.html
+            import { PerformanceRecorder, Stopwatch, Ticker } from "../lib/ddcLIB/ddcPerformance.js";
             
             const output = document.getElementById('output');
             const simulateLagCheckbox = document.getElementById('simulateLag');
@@ -62,11 +65,38 @@
                 if (lagInterval) clearInterval(lagInterval);
                 if (!recorder) return;
                 const record = recorder.stop();
-                const report = record.getReport();
-                console.log(report);
+                output.innerText = record.toString();
+                console.log(record.getReport());
                 console.log(record.toString());
                 console.log(record.getReportString());
-                output.innerText = record.toString();
+            });
+            
+            // New test for Stopwatch
+            document.getElementById('testStopwatchBtn').addEventListener('click', async () => {
+                // A sample function to simulate work
+                const sampleFunc = () => {
+                    for(let i = 0; i < 1e8; i++) {
+                        // simulate work
+                    }
+                };
+                const stopwatch = Stopwatch.fromFunc(sampleFunc);
+                output.innerText = 'Stopwatch Result: ' + (await stopwatch.runAndFormat());
+            });
+
+            // New test for Ticker
+            document.getElementById('testTickerBtn').addEventListener('click', async () => {
+                let counter = 0;
+                // A sample function to simulate a periodic task
+                const tickFunc = () => { 
+                    for(let i = 0; i < 1e8; i++) {
+                        // simulate work
+                    }
+                    counter++;
+                 };
+                const ticker = Ticker.fromFunc(tickFunc, 100);
+                // Run ticker for 5 iterations
+                const report = await ticker.runXT(5);
+                output.innerText = 'Ticker Report: ' + ticker.getReportString();
             });
         </script>
     </body>
