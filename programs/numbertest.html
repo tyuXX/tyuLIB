@@ -4,114 +4,128 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Number Test</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <script type="module">
-            // Import from our updated module.
-            import { LargeNumber, ExtremelyLargeNumber, StupendouslyLargeNumber } from '../lib/ddcLIB/ddcELN.js';
-            import { Stopwatch, Timer } from '../lib/ddcLIB/ddcPerformance.js';
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Number Test</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+    <script type="module">
+      // Import from our updated module.
+      import {
+        LargeNumber,
+        ExtremelyLargeNumber,
+        StupendouslyLargeNumber,
+      } from "../lib/ddcLIB/ddcELN.js";
+      import { Stopwatch, Timer } from "../lib/ddcLIB/ddcPerformance.js";
 
+      const pre = document.createElement("pre");
+      document.body.appendChild(pre);
 
-            const pre = document.createElement('pre');
-                document.body.appendChild(pre);
+      // Helper function to measure a section's execution time using Stopwatch
+      async function measureSection(sectionName, sectionFn) {
+        const sw = Stopwatch.fromFunc(sectionFn);
+        const elapsed = await sw.run();
+        console.log(`${sectionName} took ${elapsed} ms`);
+        pre.textContent += `\n${sectionName} took ${elapsed} ms\n`;
+      }
 
-            // Helper function to measure a section's execution time using Stopwatch
-            async function measureSection(sectionName, sectionFn) {
-                const sw = Stopwatch.fromFunc(sectionFn);
-                const elapsed = await sw.run();
-                console.log(`${sectionName} took ${elapsed} ms`);
-                pre.textContent += `\n${sectionName} took ${elapsed} ms`;
-            }
+      // Split measured sections for test variable computations
+      await (async () => {
+        // LargeNumber Tests
+        await measureSection("LargeNumber Tests", () => {
+          window.ln1 = new LargeNumber(123456789);
+          window.ln2 = new LargeNumber("3.14e8");
+          window.lnSum = ln1.add(ln2);
+          window.lnMul = ln1.multiply(ln2);
+        });
 
-            // Split measured sections for test variable computations
-            await (async () => {
-                // LargeNumber Tests
-                await measureSection("LargeNumber Tests", () => {
-                    window.ln1 = new LargeNumber(123456789);
-                    window.ln2 = new LargeNumber("3.14e8");
-                    window.lnSum = ln1.add(ln2);
-                    window.lnMul = ln1.multiply(ln2);
-                });
-                
-                // ExtremelyLargeNumber Tests
-                await measureSection("ExtremelyLargeNumber Tests", () => {
-                    window.eln1 = new ExtremelyLargeNumber("1e100");
-                    window.eln2 = new ExtremelyLargeNumber("1e120");
-                    window.elnMul = eln1.multiply(eln2);
-                    window.eln3 = new ExtremelyLargeNumber("1e400");
-                    window.eln4 = new ExtremelyLargeNumber("1e500");
-                    window.elnMul2 = eln3.multiply(eln4);
-                });
-                
-                // Repeated Multiplication & Power Tests
-                await measureSection("Repeated Multiplication & Power Tests", () => {
-                    window.lnBig = new LargeNumber("9e999999999");
-                    window.lnRepeated = lnBig;
-                    for (let i = 0; i < 100; i++) {
-                        lnRepeated = lnRepeated.multiply(lnBig);
-                    }
-                    window.lnPow2 = lnBig.pow(2);
-                    window.lnPow3 = lnBig.pow(3);
-                    
-                    window.elnBig = new ExtremelyLargeNumber("9e99999999999999999999999999999999999999999999999999999999999999999999999999");
-                    window.elnRepeated = elnBig;
-                    for (let i = 0; i < 100; i++) {
-                        elnRepeated = elnRepeated.multiply(elnBig);
-                    }
-                    window.elnPowH = elnBig;
-                    for (let i = 0; i < 10000000; i++) {
-                        elnPowH = elnPowH.pow(310);
-                    }
-                    window.elnPow2 = elnBig.pow(2);
-                    window.elnPow3 = elnBig.pow(3);
-                });
-                
-                // Layer 1+ Test
-                await measureSection("Layer 1+ Test", () => {
-                    window.elnLayerTest = new ExtremelyLargeNumber("10^^1e500");
-                });
-                
-                // StupendouslyLargeNumber Tests
-                await measureSection("StupendouslyLargeNumber Tests", () => {
-                    window.sln1 = new StupendouslyLargeNumber("1e1000");
-                    window.sln2 = new StupendouslyLargeNumber("9e999");
-                    window.slnSum = sln1.add(sln2);
-                    window.slnSub = sln1.subtract(sln2);
-                    window.slnMul = sln1.multiply(sln2);
-                    window.slnPow = sln1.pow(2);
-                    window.slnSqrt = sln1.sqrt();
-                });
-                
-                // Negative Number Tests
-                await measureSection("Negative Number Tests", () => {
-                    window.lnNeg = new LargeNumber(-123456);
-                    window.lnNeg2 = new LargeNumber("-3.14e7");
-                    window.lnNegSum = lnNeg.add(lnNeg2);
-                    window.lnNegMul = lnNeg.multiply(lnNeg2);
-                    
-                    window.elnNeg = new ExtremelyLargeNumber("-1e50");
-                    window.elnNeg2 = new ExtremelyLargeNumber("-1e60");
-                    window.elnNegSum = elnNeg.add(elnNeg2);
-                    window.elnNegSub = elnNeg.subtract(elnNeg2);
-                    
-                    window.slnNeg = new StupendouslyLargeNumber("-1e100");
-                    window.slnNeg2 = new StupendouslyLargeNumber("-2e100");
-                    window.slnNegSum = slnNeg.add(slnNeg2);
-                    window.slnNegMul = slnNeg.multiply(slnNeg2);
-                });
-                
-                // Display results.
-                pre.textContent += `
+        // ExtremelyLargeNumber Tests
+        await measureSection("ExtremelyLargeNumber Tests", () => {
+          window.eln1 = new ExtremelyLargeNumber("1e100");
+          window.eln2 = new ExtremelyLargeNumber("1e120");
+          window.elnMul = eln1.multiply(eln2);
+          window.eln3 = new ExtremelyLargeNumber("1e400");
+          window.eln4 = new ExtremelyLargeNumber("1e500");
+          window.elnMul2 = eln3.multiply(eln4);
+        });
+
+        // Repeated Multiplication & Power Tests
+        await measureSection("Repeated Multiplication & Power Tests", () => {
+          window.lnBig = new LargeNumber("9e999999999");
+          window.lnRepeated = lnBig;
+          for (let i = 0; i < 100; i++) {
+            lnRepeated = lnRepeated.multiply(lnBig);
+          }
+          window.lnPow2 = lnBig.pow(2);
+          window.lnPow3 = lnBig.pow(3);
+
+          window.elnBig = new ExtremelyLargeNumber(
+            "9e99999999999999999999999999999999999999999999999999999999999999999999999999"
+          );
+          window.elnRepeated = elnBig;
+          for (let i = 0; i < 100; i++) {
+            elnRepeated = elnRepeated.multiply(elnBig);
+          }
+          window.elnPowH = elnBig;
+          for (let i = 0; i < 100000; i++) {
+            elnPowH = elnPowH.pow(320);
+          }
+          window.elnPow2 = elnBig.pow(2);
+          window.elnPow3 = elnBig.pow(3);
+
+          window.slnPowH = elnPowH.pow(100);
+
+          for (let i = 0; i < 1000000; i++) {
+            slnPowH = slnPowH.pow(320);
+          }
+        });
+
+        // Layer 1+ Test
+        await measureSection("Layer 1+ Test", () => {
+          window.elnLayerTest = new ExtremelyLargeNumber("10^^1e500");
+        });
+
+        // StupendouslyLargeNumber Tests
+        await measureSection("StupendouslyLargeNumber Tests", () => {
+          window.sln1 = new StupendouslyLargeNumber("1e1000");
+          window.sln2 = new StupendouslyLargeNumber("9e999");
+          window.slnSum = sln1.add(sln2);
+          window.slnSub = sln1.subtract(sln2);
+          window.slnMul = sln1.multiply(sln2);
+          window.slnPow = sln1.pow(2);
+          window.slnSqrt = sln1.sqrt();
+        });
+
+        // Negative Number Tests
+        await measureSection("Negative Number Tests", () => {
+          window.lnNeg = new LargeNumber(-123456);
+          window.lnNeg2 = new LargeNumber("-3.14e7");
+          window.lnNegSum = lnNeg.add(lnNeg2);
+          window.lnNegMul = lnNeg.multiply(lnNeg2);
+
+          window.elnNeg = new ExtremelyLargeNumber("-1e50");
+          window.elnNeg2 = new ExtremelyLargeNumber("-1e60");
+          window.elnNegSum = elnNeg.add(elnNeg2);
+          window.elnNegSub = elnNeg.subtract(elnNeg2);
+
+          window.slnNeg = new StupendouslyLargeNumber("-1e100");
+          window.slnNeg2 = new StupendouslyLargeNumber("-2e100");
+          window.slnNegSum = slnNeg.add(slnNeg2);
+          window.slnNegMul = slnNeg.multiply(slnNeg2);
+        });
+
+        // Display results.
+        pre.textContent += `
 LargeNumber Tests:
   ln1: ${ln1.toString()}
   ln2: ${ln2.toString()}
@@ -137,7 +151,7 @@ Repeated Multiplication & Power Tests:
   ExtremelyLargeNumber - 9e999999999^2: ${elnPow2.toString()}
   ExtremelyLargeNumber - 9e999999999^3: ${elnPow3.toString()}
   ExtremelyLargeNumber - Huge Pow: ${elnPowH.toString()}
-  StupendouslyLargeNumber - Huge Pow: ${elnPowH.toString()}
+  StupendouslyLargeNumber - Huge Pow: ${slnPowH.toString()}
 
 Layer 1+ Test:
   ExtremelyLargeNumber (custom "^^" notation): ${elnLayerTest.toString()}
@@ -168,72 +182,253 @@ Negative Number Tests:
     Sum: ${slnNegSum.toString()}
     Mul: ${slnNegMul.toString()}
                `;
-            })();
+      })();
 
-            // Added checks for library correctness and precision
-            function assertEqual(result, expected, testName) {
-                if(result !== expected) {
-                    console.error(`FAILED: ${testName}. Expected: ${expected}, Got: ${result}`);
-                    pre.textContent += `\nFAILED: ${testName}. Expected: ${expected}, Got: ${result}`;
-                } else {
-                    console.log(`PASSED: ${testName}`);
-                    pre.textContent += `\nPASSED: ${testName}`;
-                }
+      // Added checks for library correctness and precision
+      function assertEqual(result, expected, testName) {
+        if (result !== expected) {
+          console.error(
+            `*FAILED: ${testName}. Expected: ${expected}, Got: ${result}`
+          );
+          pre.textContent += `\n*FAILED: ${testName}. Expected: ${expected}, Got: ${result}`;
+        } else {
+          console.log(`PASSED: ${testName}`);
+          pre.textContent += `\nPASSED: ${testName}`;
+        }
+      }
+
+      // Added helper function to measure test execution time using Stopwatch
+      async function measureTest(testName, testFn) {
+        const sw = Stopwatch.fromFunc(testFn);
+        const elapsed = await sw.run();
+        console.log(`${testName} took ${elapsed} ms`);
+        pre.textContent += `\n${testName} took ${elapsed} ms`;
+      }
+
+      // Wrap all tests with measurements:
+      async function runMeasuredTests() {
+        await measureSection("LargeNumber Tests", async () => {
+          await measureTest("LargeNumber addition test", () => {
+            let res = new LargeNumber("1.23e2")
+              .add(new LargeNumber("4.56e2"))
+              .toString();
+            assertEqual(res, "5.79e2", "LargeNumber addition test");
+          });
+          await measureTest("LargeNumber multiplication test", () => {
+            let res = new LargeNumber("2e1")
+              .multiply(new LargeNumber("3e0"))
+              .toString();
+            assertEqual(res, "6e1", "LargeNumber multiplication test");
+          });
+          await measureTest("LargeNumber division test", () => {
+            let res = new LargeNumber("6e1")
+              .divide(new LargeNumber("3e0"))
+              .toString();
+            assertEqual(res, "2e1", "LargeNumber division test");
+          });
+          await measureTest("LargeNumber power test", () => {
+            let res = new LargeNumber("2e1")
+              .pow(new LargeNumber("3e0"))
+              .toString();
+            assertEqual(res, "8e1", "LargeNumber power test");
+          });
+          await measureTest("LargeNumber min test", () => {
+            let res = new LargeNumber("2e1")
+              .min(new LargeNumber("3e0"))
+              .toString();
+            assertEqual(res, "3e0", "LargeNumber min test");
+          });
+          await measureTest("LargeNumber max test", () => {
+            let res = new LargeNumber("2e1")
+              .max(new LargeNumber("3e0"))
+              .toString();
+            assertEqual(res, "2e1", "LargeNumber max test");
+          });
+          await measureTest("LargeNumber floor test", () => {
+            let res = new LargeNumber("3.7e2").floor().toString();
+            assertEqual(res, "3e2", "LargeNumber floor test");
+          });
+          await measureTest("LargeNumber sqrt test", () => {
+            let res = new LargeNumber("9e2").sqrt().toString();
+            assertEqual(res, "3e1", "LargeNumber sqrt test");
+          });
+          await measureTest("LargeNumber precision addition test", () => {
+            let res = new LargeNumber("1e-1")
+              .add(new LargeNumber("2e-1"))
+              .toString();
+            assertEqual(res, "3e-1", "LargeNumber precision addition test");
+          });
+          await measureTest("LargeNumber negative addition test", () => {
+            let res = new LargeNumber("-1.0e2")
+              .add(new LargeNumber("2.0e1"))
+              .toString();
+            assertEqual(res, "-8e1", "LargeNumber negative addition test");
+          });
+        });
+        await measureSection("ExtremelyLargeNumber Tests", async () => {
+          await measureTest("ExtremelyLargeNumber division test", () => {
+            let res = new ExtremelyLargeNumber("1e120")
+              .divide(new ExtremelyLargeNumber("1e100"))
+              .toString();
+            assertEqual(res, "1e20", "ExtremelyLargeNumber division test");
+          });
+          await measureTest("ExtremelyLargeNumber addition test", () => {
+            let res = new ExtremelyLargeNumber("1e50")
+              .add(new ExtremelyLargeNumber("2e50"))
+              .toString();
+            assertEqual(res, "3e50", "ExtremelyLargeNumber addition test");
+          });
+          await measureTest("ExtremelyLargeNumber multiplication test", () => {
+            let res = new ExtremelyLargeNumber("1e50")
+              .multiply(new ExtremelyLargeNumber("2e50"))
+              .toString();
+            assertEqual(
+              res,
+              "2e100",
+              "ExtremelyLargeNumber multiplication test"
+            );
+          });
+          await measureTest("ExtremelyLargeNumber power test", () => {
+            let res = new ExtremelyLargeNumber("1e50")
+              .pow(new ExtremelyLargeNumber("2e50"))
+              .toString();
+            assertEqual(res, "1e100", "ExtremelyLargeNumber power test");
+          });
+          await measureTest("ExtremelyLargeNumber min test", () => {
+            let res = new ExtremelyLargeNumber("1e50")
+              .min(new ExtremelyLargeNumber("2e50"))
+              .toString();
+            assertEqual(res, "1e50", "ExtremelyLargeNumber min test");
+          });
+          await measureTest("ExtremelyLargeNumber max test", () => {
+            let res = new ExtremelyLargeNumber("1e50")
+              .max(new ExtremelyLargeNumber("2e50"))
+              .toString();
+            assertEqual(res, "2e50", "ExtremelyLargeNumber max test");
+          });
+          await measureTest("ExtremelyLargeNumber floor test", () => {
+            let res = new ExtremelyLargeNumber("3.7e2").floor().toString();
+            assertEqual(res, "3e2", "ExtremelyLargeNumber floor test");
+          });
+          await measureTest("ExtremelyLargeNumber sqrt test", () => {
+            let res = new ExtremelyLargeNumber("9e2").sqrt().toString();
+            assertEqual(res, "3e1", "ExtremelyLargeNumber sqrt test");
+          });
+          await measureTest(
+            "ExtremelyLargeNumber precision addition test",
+            () => {
+              let res = new ExtremelyLargeNumber("1e-1")
+                .add(new ExtremelyLargeNumber("2e-1"))
+                .toString();
+              assertEqual(
+                res,
+                "3e-1",
+                "ExtremelyLargeNumber precision addition test"
+              );
             }
-            
-            // Added helper function to measure test execution time using Stopwatch
-            async function measureTest(testName, testFn) {
-                const sw = Stopwatch.fromFunc(testFn);
-                const elapsed = await sw.run();
-                console.log(`${testName} took ${elapsed} ms`);
-                pre.textContent += `\n${testName} took ${elapsed} ms`;
+          );
+          await measureTest(
+            "ExtremelyLargeNumber negative addition test",
+            () => {
+              let res = new ExtremelyLargeNumber("-1.0e2")
+                .add(new ExtremelyLargeNumber("2.0e1"))
+                .toString();
+              assertEqual(
+                res,
+                "-8e1",
+                "ExtremelyLargeNumber negative addition test"
+              );
             }
-            
-            // Wrap all tests with measurements:
-            async function runMeasuredTests() {
-                await measureTest("LargeNumber addition test", () => {
-                    let res = new LargeNumber("1.23e2").add(new LargeNumber("4.56e2")).toString();
-                    assertEqual(res, "5.79e2", "LargeNumber addition test");
-                });
-                await measureTest("LargeNumber multiplication test", () => {
-                    let res = new LargeNumber("2e1").multiply(new LargeNumber("3e0")).toString();
-                    assertEqual(res, "6e1", "LargeNumber multiplication test");
-                });
-                await measureTest("LargeNumber precision addition test", () => {
-                    let res = new LargeNumber("1e-1").add(new LargeNumber("2e-1")).toString();
-                    assertEqual(res, "3e-1", "LargeNumber precision addition test");
-                });
-                await measureTest("LargeNumber negative addition test", () => {
-                    let res = new LargeNumber("-1.0e2").add(new LargeNumber("2.0e1")).toString();
-                    assertEqual(res, "-8e1", "LargeNumber negative addition test");
-                });
-                await measureTest("ExtremelyLargeNumber division test", () => {
-                    let res = new ExtremelyLargeNumber("1e120").divide(new ExtremelyLargeNumber("1e100")).toString();
-                    assertEqual(res, "1e20", "ExtremelyLargeNumber division test");
-                });
-                await measureTest("ExtremelyLargeNumber min test", () => {
-                    let res = new ExtremelyLargeNumber("1e50").min(new ExtremelyLargeNumber("2e50")).toString();
-                    assertEqual(res, "1e50", "ExtremelyLargeNumber min test");
-                });
-                await measureTest("ExtremelyLargeNumber floor test", () => {
-                    let res = new ExtremelyLargeNumber("3.7e2").floor().toString();
-                    assertEqual(res, "3e2", "ExtremelyLargeNumber floor test");
-                });
-                await measureTest("ExtremelyLargeNumber sqrt test", () => {
-                    let res = new ExtremelyLargeNumber("9e2").sqrt().toString();
-                    assertEqual(res, "3e1", "ExtremelyLargeNumber sqrt test");
-                });
-                await measureTest("StupendouslyLargeNumber addition test", () => {
-                    let res = new StupendouslyLargeNumber("1e1000").add(new StupendouslyLargeNumber("2e1000")).toString();
-                    assertEqual(res, "3e1000", "StupendouslyLargeNumber addition test");
-                });
-                await measureTest("StupendouslyLargeNumber division test", () => {
-                    let res = new StupendouslyLargeNumber("6e1000").divide(new StupendouslyLargeNumber("2e1000")).toString();
-                    assertEqual(res, "3e1000", "StupendouslyLargeNumber division test");
-                });
+          );
+        });
+        await measureSection("StupendouslyLargeNumber Tests", async () => {
+          await measureTest("StupendouslyLargeNumber addition test", () => {
+            let res = new StupendouslyLargeNumber("1e1000")
+              .add(new StupendouslyLargeNumber("2e1000"))
+              .toString();
+            assertEqual(res, "3e1000", "StupendouslyLargeNumber addition test");
+          });
+          await measureTest("StupendouslyLargeNumber division test", () => {
+            let res = new StupendouslyLargeNumber("6e1000")
+              .divide(new StupendouslyLargeNumber("2e1000"))
+              .toString();
+            assertEqual(res, "3e1000", "StupendouslyLargeNumber division test");
+          });
+          await measureTest(
+            "StupendouslyLargeNumber multiplication test",
+            () => {
+              let res = new StupendouslyLargeNumber("1e1000")
+                .multiply(new StupendouslyLargeNumber("2e1000"))
+                .toString();
+              assertEqual(
+                res,
+                "2e2000",
+                "StupendouslyLargeNumber multiplication test"
+              );
             }
-            
-            await runMeasuredTests();
-        </script>
-    </body>
+          );
+          await measureTest("StupendouslyLargeNumber min test", () => {
+            let res = new StupendouslyLargeNumber("1e1000")
+              .min(new StupendouslyLargeNumber("2e1000"))
+              .toString();
+            assertEqual(res, "1e1000", "StupendouslyLargeNumber min test");
+          });
+          await measureTest("StupendouslyLargeNumber max test", () => {
+            let res = new StupendouslyLargeNumber("1e1000")
+              .max(new StupendouslyLargeNumber("2e1000"))
+              .toString();
+            assertEqual(res, "2e1000", "StupendouslyLargeNumber max test");
+          });
+          await measureTest("StupendouslyLargeNumber power test", () => {
+            let res = new StupendouslyLargeNumber("1e1000")
+              .pow(new StupendouslyLargeNumber("2e1000"))
+              .toString();
+            assertEqual(res, "1e2000", "StupendouslyLargeNumber power test");
+          });
+          await measureTest("StupendouslyLargeNumber sqrt test", () => {
+            let res = new StupendouslyLargeNumber("9e1000").sqrt().toString();
+            assertEqual(res, "3e500", "StupendouslyLargeNumber sqrt test");
+          });
+          await measureTest("StupendouslyLargeNumber floor test", () => {
+            let res = new StupendouslyLargeNumber("3.7e1000")
+              .floor()
+              .toString();
+            assertEqual(res, "3e1000", "StupendouslyLargeNumber floor test");
+          });
+          await measureTest("StupendouslyLargeNumber sqrt test", () => {
+            let res = new StupendouslyLargeNumber("9e1000").sqrt().toString();
+            assertEqual(res, "3e500", "StupendouslyLargeNumber sqrt test");
+          });
+          await measureTest(
+            "StupendouslyLargeNumber precision addition test",
+            () => {
+              let res = new StupendouslyLargeNumber("1e-1")
+                .add(new StupendouslyLargeNumber("2e-1"))
+                .toString();
+              assertEqual(
+                res,
+                "3e-1",
+                "StupendouslyLargeNumber precision addition test"
+              );
+            }
+          );
+          await measureTest(
+            "StupendouslyLargeNumber negative addition test",
+            () => {
+              let res = new StupendouslyLargeNumber("-1.0e1000")
+                .add(new StupendouslyLargeNumber("2.0e1000"))
+                .toString();
+              assertEqual(
+                res,
+                "-8e1000",
+                "StupendouslyLargeNumber negative addition test"
+              );
+            }
+          );
+        });
+      }
+
+      await measureSection("Run Tests", runMeasuredTests);
+    </script>
+  </body>
 </html>
