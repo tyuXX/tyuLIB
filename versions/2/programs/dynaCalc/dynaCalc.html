@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyna Calc</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #resultDisplay {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dyna Calc</h1>
+    <input type="text" id="expressionInput" placeholder="Enter expression" />
+    <button id="calculateButton">Calculate</button>
+    <div id="resultDisplay"></div>
+    <script src="../../lib/ddcMath/interpret.js"></script>
+    <script>
+        document.getElementById('calculateButton').addEventListener('click', function() {
+            const expression = document.getElementById('expressionInput').value;
+            let result;
+            try {
+                console.log("Tokens: ", tokenize(expression));
+                result = EvaluateMath(expression);
+            } catch (error) {
+                result = 'Error: ' + error.message;
+            }
+            document.getElementById('resultDisplay').innerText = `Result: ${result}`;
+        });
+    </script>
+</body>
+</html>
