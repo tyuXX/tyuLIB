@@ -24,7 +24,7 @@
             "files": [
                 "ddcCurrency.js",
                 "ddcUpgrade.js",
-                "ddcGameSave.js"
+                "gameSave.js"
             ]
         },
         {
@@ -54,7 +54,8 @@
             "author": "tyuXX",
             "license": "MIT",
             "files": [
-                "interpret.js"
+                "interpret.js",
+                "ddcNumber.js"
             ]
         },
         {
@@ -65,6 +66,17 @@
             "license": "MIT",
             "files": [
                 "injector.js"
+            ]
+        },
+        {
+            "name": "ddcUI",
+            "version": "1.0.0",
+            "description": "Library for web page UI elements",
+            "author": "tyuXX",
+            "license": "MIT",
+            "files": [
+                "uiElements/simpleElements.js",
+                "uiElements/pagedView.js"
             ]
         }
     ],
@@ -80,7 +92,8 @@
                 "libTest.html",
                 "multiPageTest.html",
                 "numberTest.html",
-                "performancerecorder.html"
+                "performancerecorder.html",
+                "uitest.html"
             ]
         },
         {

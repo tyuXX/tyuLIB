@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LargeNumber Test Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://storage.gsdistance.org/store/icons/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #3a5683);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            color: var(--secondary-color);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Source Code Pro', monospace;
+            margin: 0.5rem 0;
+            word-break: break-all;
+        }
+
+        .card-footer {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-running {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .status-passed {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .status-failed {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .console {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.9rem;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+        }
+
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .console-title {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .console-controls button {
+            background: none;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .console-controls button:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            border-left: 3px solid #555;
+        }
+
+        .log-entry.info {
+            border-left-color: #4a90e2;
+        }
+
+        .log-entry.success {
+            border-left-color: var(--success-color);
+        }
+
+        .log-entry.error {
+            border-left-color: var(--danger-color);
+        }
+
+        .log-time {
+            color: #888;
+            margin-right: 0.5rem;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5a80;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .performance-metrics {
+            margin-top: 2rem;
+        }
+
+        .metric {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        .metric-description {
+            color: var(--secondary-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .test-results {
+            margin-top: 2rem;
+        }
+
+        .test-result {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .test-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-result-name {
+            font-weight: 500;
+        }
+
+        .test-result-time {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .test-result-message {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .test-result.passed {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .test-result.failed {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LargeNumber Test Suite</h1>
+            <p class="subtitle">Testing Large Number Implementation</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tests</span>
+                    </div>
+                </div>
+                <div class="card-value" id="test-count">0</div>
+                <div class="card-footer">
+                    <span>Total Tests</span>
+                    <span id="test-status" class="status-badge">Not Started</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Passed</span>
+                    </div>
+                </div>
+                <div class="card-value" id="passed-count">0</div>
+                <div class="card-footer">
+                    <span>Success Rate</span>
+                    <span id="success-rate">0%</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Failed</span>
+                    </div>
+                </div>
+                <div class="card-value" id="failed-count">0</div>
+                <div class="card-footer">
+                    <span>Duration</span>
+                    <span id="test-duration">0ms</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-controls">
+            <button id="run-tests" class="btn btn-primary">
+                <i class="fas fa-play"></i>
+                <span>Run All Tests</span>
+            </button>
+            <button id="clear-console" class="btn btn-secondary">
+                <i class="fas fa-eraser"></i>
+                <span>Clear Console</span>
+            </button>
+        </div>
+
+        <div class="console">
+            <div class="console-header">
+                <div class="console-title">Test Console</div>
+                <div class="console-controls">
+                    <button id="copy-console">
+                        <i class="far fa-copy"></i>
+                        <span>Copy</span>
+                    </button>
+                    <button id="clear-console-bottom">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Clear</span>
+                    </button>
+                </div>
+            </div>
+            <div id="console-output"></div>
+        </div>
+
+        <div class="performance-metrics">
+            <h2>Performance Metrics</h2>
+            <div class="metric">
+                <div class="metric-header">
+                    <div class="metric-title">Total Test Time</div>
+                    <div class="metric-value" id="total-time">0ms</div>
+                </div>
+                <div class="metric-description">Time taken to run all tests</div>
+            </div>
+        </div>
+
+        <div class="test-results" id="test-results">
+            <h2>Test Results</h2>
+            <p>Run the tests to see results here.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the LargeNumber class
+        import { LargeNumber } from '../lib/ddcMath/ddcNumber.js';
+
+        // Test state
+        let testCount = 0;
+        let passedCount = 0;
+        let failedCount = 0;
+        let startTime = 0;
+        let testResults = [];
+
+        // DOM Elements
+        const testCountEl = document.getElementById('test-count');
+        const passedCountEl = document.getElementById('passed-count');
+        const failedCountEl = document.getElementById('failed-count');
+        const successRateEl = document.getElementById('success-rate');
+        const testStatusEl = document.getElementById('test-status');
+        const testDurationEl = document.getElementById('test-duration');
+        const consoleOutputEl = document.getElementById('console-output');
+        const runTestsBtn = document.getElementById('run-tests');
+        const clearConsoleBtn = document.getElementById('clear-console');
+        const clearConsoleBottomBtn = document.getElementById('clear-console-bottom');
+        const copyConsoleBtn = document.getElementById('copy-console');
+        const testResultsEl = document.getElementById('test-results');
+        const totalTimeEl = document.getElementById('total-time');
+
+        // Logging function
+        function logToConsole(message, type = 'info') {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.innerHTML = `
+                <span class="log-time">[${timeString}]</span>
+                <span class="log-message">${message}</span>
+            `;
+            consoleOutputEl.appendChild(logEntry);
+            consoleOutputEl.scrollTop = consoleOutputEl.scrollHeight;
+        }
+
+        // Update test counters
+        function updateCounters() {
+            testCountEl.textContent = testCount;
+            passedCountEl.textContent = passedCount;
+            failedCountEl.textContent = failedCount;
+            
+            const successRate = testCount > 0 ? Math.round((passedCount / testCount) * 100) : 0;
+            successRateEl.textContent = `${successRate}%`;
+            
+            if (testCount > 0 && passedCount === testCount) {
+                testStatusEl.className = 'status-badge status-passed';
+                testStatusEl.textContent = 'All Passed';
+            } else if (failedCount > 0) {
+                testStatusEl.className = 'status-badge status-failed';
+                testStatusEl.textContent = 'Tests Failed';
+            } else {
+                testStatusEl.className = 'status-badge status-running';
+                testStatusEl.textContent = 'In Progress';
+            }
+        }
+
+        // Run a single test
+        async function runTest(testName, testFn) {
+            const start = performance.now();
+            let passed = false;
+            let error = null;
+            
+            try {
+                testStatusEl.className = 'status-badge status-running';
+                testStatusEl.textContent = 'Running...';
+                
+                await testFn();
+                passed = true;
+                passedCount++;
+                logToConsole(`✓ ${testName}`, 'success');
+            } catch (e) {
+                failedCount++;
+                error = e;
+                logToConsole(`✗ ${testName}: ${e.message}`, 'error');
+                console.error(`Test failed: ${testName}`, e);
+            }
+            
+            testCount++;
+            const duration = performance.now() - start;
+            
+            testResults.push({
+                name: testName,
+                passed,
+                duration,
+                error: error ? error.message : null
+            });
+            
+            updateCounters();
+            updateTestResults();
+            
+            return { passed, duration };
+        }
+
+        // Update test results in the UI
+        function updateTestResults() {
+            if (testResults.length === 0) {
+                testResultsEl.innerHTML = '<h2>Test Results</h2><p>Run the tests to see results here.</p>';
+                return;
+            }
+            
+            let html = '<h2>Test Results</h2>';
+            
+            testResults.forEach(test => {
+                const statusClass = test.passed ? 'passed' : 'failed';
+                const statusIcon = test.passed ? '✓' : '✗';
+                
+                html += `
+                    <div class="test-result ${statusClass}">
+                        <div class="test-result-header">
+                            <div class="test-result-name">
+                                <strong>${statusIcon} ${test.name}</strong>
+                            </div>
+                            <div class="test-result-time">${test.duration.toFixed(2)}ms</div>
+                        </div>
+                        ${test.error ? `<div class="test-result-message">${test.error}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            testResultsEl.innerHTML = html;
+        }
+
+        // Clear the console
+        function clearConsole() {
+            consoleOutputEl.innerHTML = '';
+            testResults = [];
+            updateTestResults();
+        }
+
+        // Reset test counters
+        function resetTestCounters() {
+            testCount = 0;
+            passedCount = 0;
+            failedCount = 0;
+            testResults = [];
+            updateCounters();
+            updateTestResults();
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            resetTestCounters();
+            clearConsole();
+            startTime = performance.now();
+            
+            logToConsole('Starting LargeNumber tests...', 'info');
+            
+            // ===== Construction and Conversion Tests =====
+            await runTest('Create from positive integer', () => {
+                const num = new LargeNumber(42);
+                if (num.mantissa !== 4.2 || num.exponent !== 1) {
+                    throw new Error(`Expected 4.2e1, got ${num.toString()}`);
+                }
+            });
+            
+            await runTest('Create from negative number', () => {
+                const num = new LargeNumber(-123.456);
+                if (num.mantissa >= -1.23457 || num.mantissa <= -1.23455 || num.exponent !== 2) {
+                    throw new Error(`Expected -1.23456e2, got ${num.toString()}`);
+                }
+            });
+            
+            await runTest('Create from scientific string', () => {
+                const num = new LargeNumber('1.23e45');
+                if (num.mantissa < 1.229 || num.mantissa > 1.231 || num.exponent !== 45) {
+                    throw new Error(`Expected ~1.23e45, got ${num.toString()}`);
+                }
+            });
+            
+            await runTest('Create from negative scientific string', () => {
+                const num = new LargeNumber('-5.67e-10');
+                if (num.mantissa >= -5.671 || num.mantissa <= -5.669 || num.exponent !== -10) {
+                    throw new Error(`Expected ~-5.67e-10, got ${num.toString()}`);
+                }
+            });
+            
+            await runTest('Create from object', () => {
+                const num = new LargeNumber({ mantissa: 1.5, exponent: 100 });
+                if (num.mantissa !== 1.5 || num.exponent !== 100) {
+                    throw new Error(`Expected 1.5e100, got ${num.toString()}`);
+                }
+            });
+            
+            await runTest('Create zero', () => {
+                const zero = new LargeNumber(0);
+                if (zero.mantissa !== 0 || zero.exponent !== 0) {
+                    throw new Error(`Zero not handled correctly: ${zero.toString()}`);
+                }
+                if (zero.toString() !== '0') {
+                    throw new Error(`Zero string representation incorrect: ${zero.toString()}`);
+                }
+            });
+            
+            // ===== Arithmetic Operation Tests =====
+            await runTest('Addition with similar exponents', () => {
+                const a = new LargeNumber('1e10');
+                const b = new LargeNumber('2e10');
+                const result = a.add(b);
+                if (Math.abs(result.toNumber() - 3e10) > 1) {
+                    throw new Error(`Expected 3e10, got ${result.toString()}`);
+                }
+            });
+            
+            await runTest('Addition with different exponents', () => {
+                const a = new LargeNumber('1e20');
+                const b = new LargeNumber('2e10');
+                const result = a.add(b);
+                const expected = 1e20 + 2e10;
+                const tolerance = 1e5; // Allow for floating point imprecision
+                if (Math.abs(result.toNumber() - expected) > tolerance) {
+                    throw new Error(`Expected ~1.0000000002e20, got ${result.toString()}`);
+                }
+            });
+            
+            await runTest('Subtraction with negative result', () => {
+                const a = new LargeNumber('1e10');
+                const b = new LargeNumber('2e10');
+                const result = a.subtract(b);
+                if (result.mantissa !== -1 || result.exponent !== 10) {
+                    throw new Error(`Expected -1e10, got ${result.toString()}`);
+                }
+            });
+            
+            await runTest('Multiplication with negative numbers', () => {
+                const a = new LargeNumber('-2e50');
+                const b = new LargeNumber('3e60');
+                const result = a.multiply(b);
+                const expected = -6e110;
+                const tolerance = 1e105;
+                if (Math.abs(result.toNumber() - expected) > tolerance) {
+                    throw new Error(`Expected ~-6e110, got ${result.toString()}`);
+                }
+            });
+            
+            await runTest('Division by small number', () => {
+                const a = new LargeNumber('1e-20');
+                const b = new LargeNumber('2e10');
+                const result = a.divide(b);
+                const expected = 5e-31;
+                const tolerance = 1e-36;
+                if (Math.abs(result.toNumber() - expected) > tolerance) {
+                    throw new Error(`Expected ~5e-31, got ${result.toString()}`);
+                }
+            });
+            
+            // ===== Power and Root Tests =====
+            await runTest('Power with positive integer exponent', () => {
+                const base = new LargeNumber('2');
+                const exponent = 10;
+                const result = base.pow(exponent);
+                if (result.toNumber() !== 1024) {
+                    throw new Error(`Expected 1024, got ${result.toString()}`);
+                }
+            });
+            
+            await runTest('Power with negative exponent', () => {
+                const base = new LargeNumber('10');
+                const exponent = -3;
+                const result = base.pow(exponent);
+                if (Math.abs(result.toNumber() - 0.001) > 1e-6) {
+                    throw new Error(`Expected 0.001, got ${result.toString()}`);
+                }
+            });
+            
+            await runTest('Square root', () => {
+                const num = new LargeNumber('1e100');
+                const result = num.sqrt();
+                const expected = 1e50;
+                const tolerance = 1e45;
+                if (Math.abs(result.toNumber() - expected) > tolerance) {
+                    throw new Error(`Expected ~1e50, got ${result.toString()}`);
+                }
+            });
+            
+            // ===== Comparison Tests =====
+            await runTest('Comparison: greater than', () => {
+                const a = new LargeNumber('1e100');
+                const b = new LargeNumber('1e99');
+                if (!(a.compareTo(b) > 0)) {
+                    throw new Error('Expected 1e100 > 1e99');
+                }
+                if (!(a > b)) {
+                    throw new Error('Expected 1e100 > 1e99 (operator)');
+                }
+            });
+            
+            await runTest('Comparison: less than', () => {
+                const a = new LargeNumber('1e50');
+                const b = new LargeNumber('1e100');
+                if (!(a.compareTo(b) < 0)) {
+                    throw new Error('Expected 1e50 < 1e100');
+                }
+                if (!(a < b)) {
+                    throw new Error('Expected 1e50 < 1e100 (operator)');
+                }
+            });
+            
+            await runTest('Comparison: equality', () => {
+                const a = new LargeNumber('1.23e45');
+                const b = new LargeNumber('1.23e45');
+                if (a.compareTo(b) !== 0) {
+                    throw new Error('Expected 1.23e45 == 1.23e45');
+                }
+                if (!(a.equals(b))) {
+                    throw new Error('Expected equals() to return true');
+                }
+                if (a != b) {
+                    throw new Error('Expected == to return true');
+                }
+            });
+            
+            // ===== Edge Case Tests =====
+            await runTest('Very large number handling', () => {
+                const num = new LargeNumber('1e308'); // Near Number.MAX_VALUE
+                const result = num.multiply(10);
+                if (result.exponent <= 308) {
+                    throw new Error('Expected exponent to exceed standard number range');
+                }
+            });
+            
+            await runTest('Very small number handling', () => {
+                const num = new LargeNumber('1e-308'); // Near Number.MIN_VALUE
+                const result = num.divide(10);
+                if (result.exponent >= -308) {
+                    throw new Error('Expected exponent to be below standard number range');
+                }
+            });
+            
+            await runTest('Infinity handling', () => {
+                const inf = new LargeNumber(Infinity);
+                if (!isFinite(inf.toNumber())) {
+                    throw new Error(`Infinity not handled correctly`);
+                }
+            });
+            
+            // ===== Serialization and Parsing Tests =====
+            await runTest('JSON serialization/deserialization', () => {
+                const original = new LargeNumber('-9.876e-50');
+                const json = JSON.stringify(original);
+                const parsed = new LargeNumber(JSON.parse(json));
+                if (Math.abs(parsed.mantissa - original.mantissa) > 1e-52 || 
+                    parsed.exponent !== original.exponent) {
+                    throw new Error(`Serialization failed: ${parsed.toString()} vs ${original.toString()}`);
+                }
+            });
+            
+            await runTest('toString with different formats', () => {
+                const num1 = new LargeNumber('123.456');
+                if (num1.toString() !== '123.456') {
+                    throw new Error(`Expected '123.456', got '${num1.toString()}'`);
+                }
+                
+                const num2 = new LargeNumber('1.23e45');
+                if (num2.toString() !== '1.23e+45') {
+                    throw new Error(`Expected '1.23e+45', got '${num2.toString()}'`);
+                }
+                
+                const num3 = new LargeNumber('0.00000123');
+                if (num3.toString() !== '0.00000123') {
+                    throw new Error(`Expected '0.00000123', got '${num3.toString()}'`);
+                }
+            });
+            
+            // ===== Operator Overloading Tests =====
+            await runTest('Native number operations', () => {
+                const a = new LargeNumber('1e3');
+                const b = new LargeNumber('2e3');
+                const result = a * 1 + b * 1; // Using valueOf()
+                if (result !== 3000) {
+                    throw new Error(`Expected 3000, got ${result}`);
+                }
+            });
+            
+            const totalTime = performance.now() - startTime;
+            totalTimeEl.textContent = `${totalTime.toFixed(2)}ms`;
+            
+            logToStatus(`Tests completed in ${totalTime.toFixed(2)}ms`);
+            logToConsole(`\nAll tests completed. ${passedCount} passed, ${failedCount} failed.`, 
+                        failedCount === 0 ? 'success' : 'error');
+        }
+
+        // Log to status bar
+        function logToStatus(message) {
+            testStatusEl.textContent = message;
+        }
+
+        // Event listeners
+        runTestsBtn.addEventListener('click', runAllTests);
+        clearConsoleBtn.addEventListener('click', clearConsole);
+        clearConsoleBottomBtn.addEventListener('click', clearConsole);
+        
+        copyConsoleBtn.addEventListener('click', () => {
+            const range = document.createRange();
+            range.selectNode(consoleOutputEl);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            // Show copied feedback
+            const originalText = copyConsoleBtn.innerHTML;
+            copyConsoleBtn.innerHTML = '<i class="fas fa-check"></i> <span>Copied!</span>';
+            setTimeout(() => {
+                copyConsoleBtn.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        // Initialize
+        updateCounters();
+        logToConsole('Ready to run tests. Click "Run All Tests" to begin.', 'info');
+    </script>
+</body>
+</html>
