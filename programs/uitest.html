@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UI Test</title>
+    <script src="../lib/ddcUI/uiElements/simpleElements.js"></script>
+</head>
+<body>
+    <div id="loadableBarContainer"></div>
+    <script>
+        let loadableBar = new SimpleLoadableBar(document.getElementById("loadableBarContainer"), "100px", "5px", "5px", "#000", "#fff");
+        loadableBar.fill(50);
+    </script>
+</body>
+</html>
