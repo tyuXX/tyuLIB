@@ -6,15 +6,15 @@
     <title>Test Page</title>
 </head>
 <body>
-    <script src="../lib/ddcInjector/injector.js" type="module"></script>
-    <script src="../lib/ddcGame/ddcELN.js" type="module"></script>
-    <script src="../lib/ddcTranslate/translator.js" type="module"></script>
+    <script src="../../lib/ddcInjector/injector.js" type="module"></script>
+    <script src="../../lib/ddcGame/ddcELN.js" type="module"></script>
+    <script src="../../lib/ddcTranslate/translator.js" type="module"></script>
     <h3 data-ddctranslate="Test">Test</h3>
     <h3 data-ddctranslate="hello">Test</h3>
     <h3 data-ddctranslate="world">Test</h3>
     <script type="module">
-        import { ExtremelyLargeNumber } from "../lib/ddcGame/ddcELN.js";
-        import { Translator, Language, activeLanguage, setActiveLanguage } from "../lib/ddcTranslate/translator.js";
+        import { ExtremelyLargeNumber } from "../../lib/ddcGame/ddcELN.js";
+        import { Translator, Language, activeLanguage, setActiveLanguage } from "../../lib/ddcTranslate/translator.js";
         setActiveLanguage("ch-ch");
         var t = new Translator([
             new Language("English", "en-us", {
